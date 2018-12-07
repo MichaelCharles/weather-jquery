@@ -191,18 +191,7 @@ function kToF(temp, getStr) {
   }
 };
 
-function getReference(temp) {
-  temp = Math.round(kToC(temp, false));
-  $.getJSON("js/reference.json", function(refData) {
-  for (i = 0; i < refData.refPoints.length; i++) {
-      if (temp <= refData.refPoints[i].maxTemp && temp >= refData.refPoints[i].minTemp) {
-        var refId = Math.floor(Math.random() * refData.refPoints[i].reference.length);
-        return refData.refPoints[i].reference[refId];
-  }
-  };
-  return "You've either died in flames, froze to death, or we encountered some sort error.";  
-  });
-};
+
 
 function getCookie(cname) {
     var name = cname + "=";
@@ -250,7 +239,19 @@ function updateTemp(fOrC, updateRef) {
           $("#toggle").removeClass("toggleC").addClass("toggleF");
         }
         if (updateRef) {
-          $("#ref-point").html(getReference(json.main.temp));
+          $("#ref-point").html(function (temp) {
+  temp = Math.round(kToC(temp, false));
+  $.getJSON("/js/reference.json", function(refData) {
+  for (i = 0; i < refData.refPoints.length; i++) {
+      if (temp <= refData.refPoints[i].maxTemp && temp >= refData.refPoints[i].minTemp) {
+        var refId = Math.floor(Math.random() * refData.refPoints[i].reference.length);
+        return refData.refPoints[i].reference[refId];
+  }
+  }
+  return "You've either died in flames, froze to death, or we encountered some sort error."})}
+          
+          
+          );
         };
         var iconData = parseWeatherId(json.weather[0].id);
         $("#weather-type").html(iconData[0]);
