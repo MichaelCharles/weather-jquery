@@ -9,7 +9,7 @@ function hideLoader() {
       $("#loading").hide();
     }
   }, 1000);
-};
+}
 
 function parseWeatherId(id) {
   switch (id) {
@@ -34,7 +34,7 @@ function parseWeatherId(id) {
       return ["Thunderstorm with drizzle.", "wi-thunderstorm"];
     case 232:
       return ["Thunderstorm with heavy drizzle.", "wi-thunderstorm"];
-      // Group 3xx: Drizzle
+    // Group 3xx: Drizzle
     case 300:
       return ["Light intensity drizzle.", "wi-raindrops"];
     case 301:
@@ -53,7 +53,7 @@ function parseWeatherId(id) {
       return ["Heavy shower rain and drizzle.", "wi-showers"];
     case 321:
       return ["Shower drizzle.", "wi-showers"];
-      // Group 5xx: Rain
+    // Group 5xx: Rain
     case 500:
       return ["Light rain.", "wi-rain"];
     case 501:
@@ -74,7 +74,7 @@ function parseWeatherId(id) {
       return ["Heavy intensity shower rain.", "wi-showers"];
     case 531:
       return ["Ragged shower rain.", "wi-showers"];
-      // Group 6xx: Snow
+    // Group 6xx: Snow
     case 600:
       return ["Light snow.", "wi-snow"];
     case 601:
@@ -95,7 +95,7 @@ function parseWeatherId(id) {
       return ["Shower snow.", "wi-snow"];
     case 622:
       return ["heavy shower snow.", "wi-snow"];
-      // Group 7xx: Atmosphere
+    // Group 7xx: Atmosphere
     case 701:
       return ["Mist.", "wi-fog"];
     case 711:
@@ -116,10 +116,10 @@ function parseWeatherId(id) {
       return ["Squalls.", "wi-cloudy-gusts"];
     case 781:
       return ["Tornado.", "wi-tornado"];
-      // Group 800: Clear
+    // Group 800: Clear
     case 800:
       return ["Clear.", "wi-day-sunny"];
-      // Group 80x: Clouds
+    // Group 80x: Clouds
     case 801:
       return ["Few clouds.", "wi-cloud"];
     case 802:
@@ -128,7 +128,7 @@ function parseWeatherId(id) {
       return ["Broken clouds.", "wi-cloud"];
     case 804:
       return ["Overcast.", "wi-cloudy"];
-      // Group 90x: Extreme
+    // Group 90x: Extreme
     case 900:
       return ["Tornado.", "wi-tornado"];
     case 901:
@@ -143,7 +143,7 @@ function parseWeatherId(id) {
       return ["Windy.", "wi-windy"];
     case 906:
       return ["Hail.", "wi-hail"];
-      // Group 9xx: Additional
+    // Group 9xx: Additional
     case 951:
       return ["Calm.", "wi-hail"];
     case 952:
@@ -170,8 +170,8 @@ function parseWeatherId(id) {
       return ["Hurricane.", "wi-hurricane"];
     default:
       return ["Not available.", "wi-na"];
-  };
-};
+  }
+}
 
 function kToC(temp, getStr) {
   temp = Math.round((temp -= 273.15) * 10) / 10;
@@ -180,7 +180,7 @@ function kToC(temp, getStr) {
   } else {
     return temp;
   }
-};
+}
 
 function kToF(temp, getStr) {
   temp = Math.round((temp * (9 / 5) - 459.67) * 10) / 10;
@@ -189,35 +189,40 @@ function kToF(temp, getStr) {
   } else {
     return temp;
   }
-};
-
-
+}
 
 function getCookie(cname) {
-    var name = cname + "=";
-    var ca = document.cookie.split(';');
-    for(var i=0; i<ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0)==' ') c = c.substring(1);
-        if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
-    }
-    return "";
+  var name = cname + "=";
+  var ca = document.cookie.split(";");
+  for (var i = 0; i < ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) == " ") c = c.substring(1);
+    if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+  }
+  return "";
 }
 
 function setCookie(cname, cvalue, exdays) {
-    var d = new Date();
-    d.setTime(d.getTime() + (exdays*24*60*60*1000));
-    var expires = "expires="+d.toUTCString();
-    document.cookie = cname + "=" + cvalue + "; " + expires;
+  var d = new Date();
+  d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
+  var expires = "expires=" + d.toUTCString();
+  document.cookie = cname + "=" + cvalue + "; " + expires;
 }
 
 function updateTemp(fOrC, updateRef) {
-  // construct url based on location 
+  // construct url based on location
   $("#loader-text").html("Requesting location access...");
   if (navigator.geolocation) {
     $("#loader-text").html("Loading geolocation...");
     navigator.geolocation.getCurrentPosition(function(position) {
-      apiOpenWeatherUrl = baseOpenWeatherUrl + "?lat=" + position.coords.latitude + "&lon=" + position.coords.longitude + "&APPID=" + apiKey;
+      apiOpenWeatherUrl =
+        baseOpenWeatherUrl +
+        "?lat=" +
+        position.coords.latitude +
+        "&lon=" +
+        position.coords.longitude +
+        "&APPID=" +
+        apiKey;
       $.getJSON(apiOpenWeatherUrl, function(json) {
         $("#loader-text").html("Loading weather information...");
         $("#location").html(json.name);
@@ -226,33 +231,44 @@ function updateTemp(fOrC, updateRef) {
             fOrC = "c";
           } else if ($("#opposite").html() == "Celsius") {
             fOrC = "f";
-          };
+          }
         }
         setCookie("unitpref", fOrC[0].toLowerCase(), 30);
         if ("f" == fOrC[0].toLowerCase()) {
           $("#temp").html(kToF(json.main.temp));
           $("#opposite").html("Celsius");
-          $("#toggle").removeClass("toggleF").addClass("toggleC");
+          $("#toggle")
+            .removeClass("toggleF")
+            .addClass("toggleC");
         } else {
           $("#temp").html(kToC(json.main.temp));
           $("#opposite").html("Fahrenheit");
-          $("#toggle").removeClass("toggleC").addClass("toggleF");
+          $("#toggle")
+            .removeClass("toggleC")
+            .addClass("toggleF");
         }
         if (updateRef) {
-          $("#ref-point").html(function (temp) {
-  temp = Math.round(kToC(temp, false));
-  $.getJSON("/js/reference.json", function(refData) {
-  for (i = 0; i < refData.refPoints.length; i++) {
-      if (temp <= refData.refPoints[i].maxTemp && temp >= refData.refPoints[i].minTemp) {
-        var refId = Math.floor(Math.random() * refData.refPoints[i].reference.length);
-        return refData.refPoints[i].reference[refId];
-  }
-  }
-  return "You've either died in flames, froze to death, or we encountered some sort error."})}
-          
-          
-          );
-        };
+          $("#ref-point").html(function(temp) {
+            temp = Math.round(kToC(temp, false));
+            $.getJSON(
+              "/Weather-by-Reference-Point//js/reference.json",
+              function(refData) {
+                for (i = 0; i < refData.refPoints.length; i++) {
+                  if (
+                    temp <= refData.refPoints[i].maxTemp &&
+                    temp >= refData.refPoints[i].minTemp
+                  ) {
+                    var refId = Math.floor(
+                      Math.random() * refData.refPoints[i].reference.length
+                    );
+                    return refData.refPoints[i].reference[refId];
+                  }
+                }
+                return "You've either died in flames, froze to death, or we encountered some sort error.";
+              }
+            );
+          });
+        }
         var iconData = parseWeatherId(json.weather[0].id);
         $("#weather-type").html(iconData[0]);
         $("#weather-icon").html("<i class='wi " + iconData[1] + "'></i>");
@@ -265,7 +281,7 @@ function updateTemp(fOrC, updateRef) {
 $("document").ready(function() {
   if (!getCookie("unitpref")) {
     setCookie("unitpref", "c", 30);
-  };
+  }
   updateTemp(getCookie("unitpref"), true);
 
   $("#toggle").on("click", function() {
@@ -289,5 +305,4 @@ $("document").ready(function() {
   $("#ref-point").on("click", function() {
     updateTemp("displayed", true);
   });
-
 });
