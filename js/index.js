@@ -1,4 +1,3 @@
-import refData from 'js/reference';
 var apiKey = "7271d3292aac8f43062a11e66a3aa1b0";
 var baseOpenWeatherUrl = "https://api.openweathermap.org/data/2.5/weather";
 var apiOpenWeatherUrl = "";
