@@ -1,10 +1,6 @@
 var apiKey = "7271d3292aac8f43062a11e66a3aa1b0";
 var baseOpenWeatherUrl = "https://api.openweathermap.org/data/2.5/weather";
 var apiOpenWeatherUrl = "";
-var refData;
-$.getJSON("js/reference.json", function(data) {
-  refData = data;
-});
 
 function hideLoader() {
   $("#loader-text").html("Finishing up...");
@@ -197,13 +193,15 @@ function kToF(temp, getStr) {
 
 function getReference(temp) {
   temp = Math.round(kToC(temp, false));
+  $.getJSON("js/reference.json", function(refData) {
   for (i = 0; i < refData.refPoints.length; i++) {
-    if (temp <= refData.refPoints[i].maxTemp && temp >= refData.refPoints[i].minTemp) {
-      var refId = Math.floor(Math.random() * refData.refPoints[i].reference.length);
-      return refData.refPoints[i].reference[refId];
-    }
+      if (temp <= refData.refPoints[i].maxTemp && temp >= refData.refPoints[i].minTemp) {
+        var refId = Math.floor(Math.random() * refData.refPoints[i].reference.length);
+        return refData.refPoints[i].reference[refId];
+  }
   };
-  return "You've either died in flames, froze to death, or we encountered some sort error.";
+  return "You've either died in flames, froze to death, or we encountered some sort error.";  
+  });
 };
 
 function getCookie(cname) {
