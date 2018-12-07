@@ -271,7 +271,7 @@ function updateTemp(fOrC, updateRef) {
             .addClass("toggleF");
         }
         if (updateRef) {
-            getReference.then($("#ref-point").html(json.main.temp));
+            getReference.resolve($("#ref-point").html(json.main.temp));
         }
         var iconData = parseWeatherId(json.weather[0].id);
         $("#weather-type").html(iconData[0]);
